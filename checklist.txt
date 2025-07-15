@@ -1,0 +1,9 @@
+Bot Code Management:
+- Have variables (such as the channel ID, support staff roles, etc) that are set to each server the bot is in and can be set/changed using commands or buttons/drop-downs.
+  (Folder names set as the guild server ID, and then text files in there that change based on the channel / role IDs that the admin sets)
+- A separate page per command / button callback.
+
+Bot Features:
+- English, Spanish, Portuguese & Arabic Languages
+- Ability to enable/disable languages (both by hiding the buttons completely or disabling the button)
+- Separate commands for multi-language or just English with categories?

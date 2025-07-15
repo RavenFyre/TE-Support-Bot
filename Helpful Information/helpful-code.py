@@ -14,7 +14,6 @@ import time
 import linecache
 import asyncio
 from langdetect import detect
-import Support-Panel-Multi-Lang
 
 # Bot definition and intents:
 
@@ -30,7 +29,7 @@ bot = commands.Bot(command_prefix=".", description=description, help_command=Non
 
 @bot.event
 async def on_ready():
-    bot.add_view(MultiLangSupport())
+    bot.add_view(SuggestionPanelButton())
     bot.add_view(ViewVotesButton())
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='The discord server'))
     print(f"{bot.name} is online!")
@@ -119,9 +118,11 @@ class ExampleModal(discord.ui.Modal, title='Making a Suggestion'):
 
 # --- BUTTONS ---
 
-# Creating multi-language support buttons for English, Spanish, Portuguese & Arabic
+# --- EXAMPLES ---
 
-class MultiLangSupport(discord.ui.View):
+# Creating an example button
+
+class ExampleButton(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
@@ -133,12 +134,6 @@ class MultiLangSupport(discord.ui.View):
 
 # --- SLASH COMMANDS ---
 
-# Slash Command to send Multi-Language Panel
-
-@bot.tree.command(name="multi_lang_panel", description="Sends the support panel with English, Spanish, Portuguese & Arabic support.")
-@app_commands.checks.has_permissions(manage_guild=True)
-Support-Panel-Multi-Lang.send_multi_lang_panel(interaction: discord.Interaction)
-
 # --- EXAMPLES ---
 
 # Slash Command to send a modal
@@ -147,6 +142,17 @@ Support-Panel-Multi-Lang.send_multi_lang_panel(interaction: discord.Interaction)
 async def send_modal(interaction: discord.Interaction):
 
     await interaction.response.send_modal(SuggestModal(title="Making a Suggestion", custom_id="suggestion"))
+
+# Slash Command to send a 'panel' with a button that only administrators can use
+
+@bot.tree.command(name="send_button", description="Sends an example panel with a button for the server.", guild_ids=my_server)
+@app_commands.checks.has_permissions(manage_guild=True)
+async def send_button(interaction: discord.Interaction):
+
+    await interaction.response.send_message(f"{interaction.user.mention}, the suggestion panel will be posted below!", ephemeral=True)
+    time.sleep(1)
+    embed = discord.Embed(description="**Example Panel**\n\nClick the button below!", color=0x00FF00)
+    example_panel = await interaction.channel.send(f"```yaml\n\nExample Panel\n\n```\n• Click the button below!", embed=embed, view=ExampleButton())
 
 # Slash Command with Arguments
 
@@ -196,6 +202,48 @@ async def on_member_remove(member):
             color=discord.Colour.orange(),
         )
         await leave_channel.send(embed=leave_embed)
+
+# Bot Event to limit reactions per user
+
+#@bot.event
+#async def on_raw_reaction_add(payload):
+#    channel = await bot.fetch_channel(payload.channel_id)
+#    suggestion = await channel.fetch_message(payload.message_id)
+#    user = await bot.fetch_user(payload.user_id)
+    
+#    if user != bot.user:
+#        if suggestion.author.id == bot_id: # ID of Suggestions Bot
+          
+#            if payload.emoji.name == "✅":
+#                cross_reaction = get(suggestion.reactions, emoji="❌")
+#                await cross_reaction.remove(user)
+              
+#            elif payload.emoji.name == "❌":
+#                tick_reaction = get(suggestion.reactions, emoji="✅")
+#                await tick_reaction.remove(user)
+
+# Bot Event to delete messages in a certain channel
+
+#@bot.event
+#async def on_message(message):
+
+#    channel_name = bot.get_channel(id)
+
+#    if message.author.bot:
+
+#        return
+#        await bot.process_commands(message)
+
+#        else:
+
+#            await message.delete()
+#            embed = discord.Embed(
+#                description=f"{message.author.mention}, your message has been removed as this is a command-only channel. Please type `.suggest` (including the full stop) at the start of your message, followed by your suggestion.",
+#                color=discord.Colour.red(),
+#                )
+#            reply = await message.channel.send(embed=embed, delete_after=15)
+            # await reply.delete(delay=10)  # Delete the reply after 10 seconds
+#            await bot.process_commands(message)
 
 # Run bot:
 
