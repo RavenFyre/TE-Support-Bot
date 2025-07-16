@@ -14,7 +14,7 @@ import time
 import linecache
 import asyncio
 from langdetect import detect
-import Support-Panel-Multi-Lang
+import SupportPanels
 
 # Bot definition and intents:
 
@@ -23,7 +23,8 @@ bot = commands.Bot(command_prefix=".", description=description, help_command=Non
 
 # Universal variables:
 
-# bot_id = 
+bot_id = 929852328226467860
+
 # everytime a new ticket is made, the bot stores the ticket channel ID + author ID.
 
 # Bot Event when bot starts up or restarts:
@@ -31,9 +32,9 @@ bot = commands.Bot(command_prefix=".", description=description, help_command=Non
 @bot.event
 async def on_ready():
     bot.add_view(MultiLangSupport())
-    bot.add_view(ViewVotesButton())
+    bot.add_view(EnglishCategorySupport())
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='The discord server'))
-    print(f"{bot.name} is online!")
+    print(f"{bot.user} is online!")
     try:
         synced = await bot.tree.sync()
         print("Commands synced successfully.")
@@ -43,6 +44,59 @@ async def on_ready():
 # ~ ~ ~ ~ ~ BOT COMPONENTS ~ ~ ~ ~ ~
 
 # --- SELECT MENUS ---
+
+class EnglishCategorySupport(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+      
+    @discord.ui.select(
+        custom_id = "english-category-support",
+        placeholder = "What would you like help with today?",
+        min_values = 1,
+        max_values = 1,
+        options = [
+            discord.SelectOption(
+                label="Option 1",
+                description="This is the first option"
+            ),
+            discord.SelectOption(
+                label="Option 2",
+                description="This is the second option"
+            ),
+            discord.SelectOption(
+                label="Option 3",
+                description="This is the third option"
+            )
+        ]
+    )
+    async def select_callback(self, select, interaction):
+      
+        if select.values[0] == "Option 1":
+          
+            embed = discord.Embed(
+                description=f"You chose option 1!",
+                color=discord.Colour.orange(),
+            )
+            embed.set_footer(text="Coded by Raven Fyre")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        if select.values[0] == "Option 2":
+          
+            embed = discord.Embed(
+                description=f"You chose option 2!",
+                color=discord.Colour.purple(),
+            )
+            embed.set_footer(text="Coded by Raven Fyre")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        if select.values[0] == "Option 3":
+          
+            embed = discord.Embed(
+                description=f"You chose option 3!",
+                color=discord.Colour.pink(),
+            )
+            embed.set_footer(text="Coded by Raven Fyre")
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # --- EXAMPLES ---
 
@@ -125,11 +179,21 @@ class MultiLangSupport(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @discord.ui.button(label="Click Me", custom_id="click_me", row=0, style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label="English", custom_id="english_multi_lang", row=0, style=discord.ButtonStyle.blurple)    
+    async def english_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
+        await interaction.response.send_message("English Button pressed!")
     
-    async def click_me_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
+    @discord.ui.button(label="Español", custom_id="spanish_multi_lang", row=0, style=discord.ButtonStyle.blurple)
+    async def spanish_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
+        await interaction.response.send_message("Spanish Button pressed!")
     
-        await interaction.response.send_message("Button pressed!")
+    @discord.ui.button(label="Português", custom_id="portuguese_multi_lang", row=0, style=discord.ButtonStyle.blurple)    
+    async def portuguese_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
+        await interaction.response.send_message("Portuguese Button pressed!")
+    
+    @discord.ui.button(label="العربي", custom_id="arabic_multi_lang", row=0, style=discord.ButtonStyle.blurple)
+    async def arabic_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
+        await interaction.response.send_message("Arabic Button pressed!")
 
 # --- SLASH COMMANDS ---
 
@@ -137,20 +201,34 @@ class MultiLangSupport(discord.ui.View):
 
 @bot.tree.command(name="multi_lang_panel", description="Sends the support panel with English, Spanish, Portuguese & Arabic support.")
 @app_commands.checks.has_permissions(manage_guild=True)
-Support-Panel-Multi-Lang.send_multi_lang_panel(interaction: discord.Interaction)
+async def send_multi_lang_panel(interaction: discord.Interaction):
+
+    await interaction.response.send_message(f"{interaction.user.mention}, the suggestion panel will be posted below!", ephemeral=True)
+    time.sleep(1)
+    suggestion_panel = await interaction.channel.send(SupportPanels.multi_lang_message_content, embed=SupportPanels.multi_lang_embed, view=MultiLangSupport())
+
+# Slash Command to send English categories Panel
+
+@bot.tree.command(name="english_category_panel", description="Sends the support panel with a drop-down menu to select a support category.")
+@app_commands.checks.has_permissions(manage_guild=True)
+async def send_english_category_panel(interaction: discord.Interaction):
+
+    await interaction.response.send_message(f"{interaction.user.mention}, the suggestion panel will be posted below!", ephemeral=True)
+    time.sleep(1)
+    suggestion_panel = await interaction.channel.send(SupportPanels.english_support_message_content, embed=SupportPanels.english_support_embed, view=EnglishCategorySupport())
 
 # --- EXAMPLES ---
 
 # Slash Command to send a modal
 
-@bot.tree.command(name="send_modal", description="An example slash command to send a modal to the user.", guild_ids=my_server)
+@bot.tree.command(name="send_modal", description="An example slash command to send a modal to the user.")
 async def send_modal(interaction: discord.Interaction):
 
     await interaction.response.send_modal(SuggestModal(title="Making a Suggestion", custom_id="suggestion"))
 
 # Slash Command with Arguments
 
-@bot.tree.command(name="multiple_arguments", description="An example slash command with multiple arguments.", guild_ids=my_server)
+@bot.tree.command(name="multiple_arguments", description="An example slash command with multiple arguments.")
 @app_commands.checks.has_permissions(manage_guild=True)
 @app_commands.describe(arg1='What info do you need to provide?')
 @app_commands.describe(arg2='What more info do you need?')
