@@ -31,6 +31,9 @@ bot_id = 929852328226467860
 
 @bot.event
 async def on_ready():
+    bot.tree.add_command(load_cog)
+    bot.tree.add_command(unload_cog)
+    await bot.load_extension("Cogs.ping")
     bot.add_view(MultiLangSupport())
     bot.add_view(EnglishCategorySupport())
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='The discord server'))
@@ -196,6 +199,21 @@ class MultiLangSupport(discord.ui.View):
         await interaction.response.send_message("Arabic Button pressed!")
 
 # --- SLASH COMMANDS ---
+
+# Load the specified cog files
+@app_commands.command(name="load", description="Load a specific cog")
+@app_commands.checks.has_permissions(manage_guild=True)
+async def load_cog(interaction: discord.Interaction, extension: str):
+    await bot.load_extension(f"Cogs.{extension}")
+    await interaction.response.send_message(f"Cog '{extension}' loaded.")
+    print(f"Cog '{extension}' has been loaded.")
+
+# Unload the specified cog files
+@app_commands.command(name="unload", description="Unload a specific cog")
+async def unload_cog(interaction: discord.Interaction, extension: str):
+    await bot.unload_extension(f"Cogs.{extension}")
+    await interaction.response.send_message(f"Cog '{extension}' unloaded.")
+    print(f"Cog '{extension}' has been unloaded.")
 
 # Slash Command to send Multi-Language Panel
 
