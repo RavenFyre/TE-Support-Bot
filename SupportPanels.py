@@ -3,6 +3,8 @@
 import discord
 from discord import Client, Intents, Embed, app_commands
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # Templates for messages + embeds
 
 # name_message_content = f""
@@ -13,6 +15,8 @@ from discord import Client, Intents, Embed, app_commands
 # Nice green: #388e3c
 # Blurple: #738adb
 # Nice bright blue: #1da0f2
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Posting the Multi-Language (English, Spanish, Portuguese & Arabic) Support Panel
 

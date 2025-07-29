@@ -5,6 +5,8 @@ from discord.ext import commands
 from discord import app_commands
 import time
 import SupportPanels
+import cogs.MultiLangENCat
+from cogs.MultiLangENCat import ENCategoryMenu
 
 # Buttons for multi-language support: English, Spanish, Portuguese & Arabic
 
@@ -14,7 +16,7 @@ class MultiLangSupportButtons(discord.ui.View):
 
     @discord.ui.button(label="English", custom_id="english_multi_lang", row=0, style=discord.ButtonStyle.blurple)    
     async def english_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
-        await interaction.response.send_message("English Button pressed!", ephemeral=True)
+        await interaction.response.send_message("", embed=cogs.MultiLangENCat.ENCategory_embed, view=ENCategoryMenu(), ephemeral=True)
     
     @discord.ui.button(label="Español", custom_id="spanish_multi_lang", row=0, style=discord.ButtonStyle.blurple)
     async def spanish_button_callback(self, interaction: discord.Interaction, button: discord.ui.button):
@@ -41,7 +43,7 @@ class multi_lang_panel_cog(commands.Cog):
         
         await interaction.response.send_message(f"{interaction.user.mention}, the suggestion panel will be posted below!", ephemeral=True)
         time.sleep(1)
-        suggestion_panel = await interaction.channel.send(SupportPanels.multi_lang_message_content, embed=SupportPanels.multi_lang_embed, view=MultiLangSupportButtons())
+        suggestion_panel = await interaction.channel.send(embed=SupportPanels.multi_lang_embed, view=MultiLangSupportButtons())
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(multi_lang_panel_cog(bot))

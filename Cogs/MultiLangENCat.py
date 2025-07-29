@@ -1,14 +1,19 @@
-#cogs file for EnglishCategoryPanel.py
+# cogs file for MultiLangENCat.py
+
+# Libraries to import:
 
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord import Client, Intents, Embed, app_commands
 import time
-import SupportPanels
+
+# Embed
+
+ENCategory_embed = discord.Embed(title="English Support", description="Please select one of the options from the drop-down menu below this message to get started! If none of the options apply, feel free to select 'Miscellaneous'", color=0x388e3c)
 
 # Select Menu for the English Categories panel
 
-class EnglishCategorySupportButtons(discord.ui.View):
+class ENCategoryMenu(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
       
@@ -19,25 +24,13 @@ class EnglishCategorySupportButtons(discord.ui.View):
         max_values = 1,
         options = [
             discord.SelectOption(
-                label="Account",
-                description="I have a problem or question regarding my TLOU Esports account"
+                label="Option 1",
+                description="This is the first option"
             ),
             discord.SelectOption(
-                label="Match",
+                label="Option 2",
                 description="This is the second option"
             ),
-            discord.SelectOption(
-                label="Option 3",
-                description="This is the third option"
-            ),
-            discord.SelectOption(
-                label="Option 4",
-                description="This is the third option"
-            ),
-            discord.SelectOption(
-                label="Option 3",
-                description="This is the third option"
-            )
             discord.SelectOption(
                 label="Option 3",
                 description="This is the third option"
@@ -72,20 +65,3 @@ class EnglishCategorySupportButtons(discord.ui.View):
             )
             embed.set_footer(text="Coded by Raven Fyre")
             await interaction.response.send_message(embed=embed, ephemeral=True)
-
-# Slash Command to send English categories Panel
-
-class english_category_panel_cog(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @app_commands.command(name="english_category_panel", description="Sends the support panel with a drop-down menu to select a support category.")
-    @app_commands.checks.has_permissions(manage_guild=True)
-    async def send_english_category_panel(self, interaction: discord.Interaction):
-        
-        await interaction.response.send_message(f"{interaction.user.mention}, the suggestion panel will be posted below!", ephemeral=True)
-        time.sleep(1)
-        suggestion_panel = await interaction.channel.send(embed=SupportPanels.english_support_embed, view=EnglishCategorySupportButtons())
-
-async def setup(bot: commands.Bot):
-    await bot.add_cog(english_category_panel_cog(bot))
