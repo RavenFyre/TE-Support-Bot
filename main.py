@@ -70,6 +70,17 @@ class ExampleModal(discord.ui.Modal, title='Making a Suggestion'):
 
 # --- SLASH COMMANDS ---
 
+# Sync the commands
+@app_commands.command(name="sync", description="Sync the commands when the bot has been updated.")
+@app_commands.checks.has_permissions(manage_guild=True)
+async def sync_commands(interaction: discord.Interaction):
+    try:
+        await interaction.response.defer()
+        synced = await bot.tree.sync()
+        await interaction.followup.send("Commands synced successfully.")
+    except:
+        await interaction.followup.send("Error syncing commands.")
+
 # Load the specified cog files
 @app_commands.command(name="load", description="Load a specific cog")
 @app_commands.checks.has_permissions(manage_guild=True)
@@ -99,20 +110,6 @@ async def unload_cog(interaction: discord.Interaction, extension: str):
 async def send_modal(interaction: discord.Interaction):
 
     await interaction.response.send_modal(SuggestModal(title="Making a Suggestion", custom_id="suggestion"))
-
-# Slash Command with Arguments
-
-@bot.tree.command(name="multiple_arguments", description="An example slash command with multiple arguments.")
-@app_commands.checks.has_permissions(manage_guild=True)
-@app_commands.describe(arg1='What info do you need to provide?')
-@app_commands.describe(arg2='What more info do you need?')
-@app_commands.rename(arg1='new_name_here')
-@app_commands.rename(arg2='new_name_here_2')
-async def multiple_arguments(interaction: discord.Interaction, arg1: str, arg2: str):
-
-    embed = discord.Embed(description=f"{interaction.user.mention} said {arg1} and {arg2}.", timestamp=datetime.datetime.now(), color=0x00FF00)
-    embed.set_footer(text=f"{bot.user.display_name}")
-    await interaction.response.send_message(f"{interaction.user.mention}, thank you for using this slash command!", ephemeral=True)
 
 # Run bot:
 

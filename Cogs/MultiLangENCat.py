@@ -24,20 +24,32 @@ class ENCategoryMenu(discord.ui.View):
         max_values = 1,
         options = [
             discord.SelectOption(
-                label="Option 1",
-                description="This is the first option"
+                label="My Account",
+                description="I need to change my details or have an issue with my TLOU Esports account"
             ),
             discord.SelectOption(
-                label="Option 2",
-                description="This is the second option"
+                label="Match",
+                description="I have a question or problem regarding a match"
             ),
             discord.SelectOption(
-                label="Option 3",
-                description="This is the third option"
+                label="Website Errors",
+                description="I have encountered an error or glitch on the website"
+            ),
+            discord.SelectOption(
+                label="Discord",
+                description="I have a question or problem regarding the Discord server"
+            ),
+            discord.SelectOption(
+                label="Report Cheating",
+                description="I would like to report a player for in-game cheating"
+            ),
+            discord.SelectOption(
+                label="Miscellaneous",
+                description="Any other problem or query"
             )
         ]
     )
-    async def select_callback(self, select, interaction):
+    async def en_category_select_callback(self, select, interaction):
       
         if select.values[0] == "Option 1":
           
