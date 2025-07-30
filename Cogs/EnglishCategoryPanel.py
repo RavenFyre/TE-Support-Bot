@@ -37,7 +37,7 @@ class EnglishCategorySupportButtons(discord.ui.View):
             discord.SelectOption(
                 label="Option 3",
                 description="This is the third option"
-            )
+            ),
             discord.SelectOption(
                 label="Option 3",
                 description="This is the third option"
