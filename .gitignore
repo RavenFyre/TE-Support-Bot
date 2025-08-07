@@ -1,0 +1,4 @@
+google-credentials.json
+*.json
+.env
+template.py
