@@ -18,6 +18,7 @@ import SupportPanels
 from cogs.MultiLangPanel import MultiLangSupportButtons
 from cogs.EnglishCategoryPanel import EnglishCategorySupportButtons
 from cogs.RoleReactions import ParticipationRoleButtons1, ParticipationRoleButtons2, ParticipationRoleButtons3
+
 # Bot definition and intents:
 
 description = """A bot used for providing a comprehensive self-service guidance and ticketing system for support purposes, coded by Raven Fyre for use in the TLOU Esports Discord server."""
@@ -33,24 +34,48 @@ bot_id = 929852328226467860
 
 @bot.event
 async def on_ready():
+    # Register slash commands
+    bot.tree.add_command(sync_commands)
     bot.tree.add_command(load_cog)
     bot.tree.add_command(unload_cog)
-    await bot.load_extension("cogs.ping")
-    await bot.load_extension("cogs.EnglishCategoryPanel")
-    await bot.load_extension("cogs.MultiLangPanel")
-    await bot.load_extension("cogs.RoleReactions")
+
+    # Load essential/critical cogs manually (if needed early)
+    #await bot.load_extension("cogs.EnglishCategoryPanel")
+    #await bot.load_extension("cogs.MultiLangPanel")
+    #await bot.load_extension("cogs.RoleReactions")
+
+    # Add persistent views
     bot.add_view(MultiLangSupportButtons())
     bot.add_view(EnglishCategorySupportButtons())
     bot.add_view(ParticipationRoleButtons1())
     bot.add_view(ParticipationRoleButtons2())
     bot.add_view(ParticipationRoleButtons3())
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='TLOU Esports'))
+
+    # Automatically load all other cogs in /cogs folder
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py") and not filename.startswith("__"):
+            ext = f"cogs.{filename[:-3]}"
+            try:
+                if ext not in bot.extensions:
+                    await bot.load_extension(ext)
+                    print(f"✅ Auto-loaded: {ext}")
+            except Exception as e:
+                print(f"❌ Failed to auto-load {ext}: {e}")
+
+    # Set bot presence
+    await bot.change_presence(activity=discord.Activity(
+        type=discord.ActivityType.watching,
+        name='TLOU Esports'
+    ))
+
+    # Sync slash commands
     print(f"{bot.user} is online!")
     try:
         synced = await bot.tree.sync()
-        print("Commands synced successfully.")
-    except:
-        print("Error syncing commands.")
+        print("✅ Slash commands synced.")
+    except Exception as e:
+        print(f"❌ Error syncing commands: {e}")
+
 
 # --- MODALS ---
 
@@ -75,11 +100,10 @@ class ExampleModal(discord.ui.Modal, title='Making a Suggestion'):
 @app_commands.checks.has_permissions(manage_guild=True)
 async def sync_commands(interaction: discord.Interaction):
     try:
-        await interaction.response.defer()
         synced = await bot.tree.sync()
-        await interaction.followup.send("Commands synced successfully.")
-    except:
-        await interaction.followup.send("Error syncing commands.")
+        await interaction.response.send_message("Commands synced successfully.", ephemeral=True)
+    except Exception as e:
+        await interaction.response.send_message(f"Error syncing commands: {e}", ephemeral=True)
 
 # Load the specified cog files
 @app_commands.command(name="load", description="Load a specific cog")
@@ -90,9 +114,10 @@ async def load_cog(interaction: discord.Interaction, extension: str):
         await bot.load_extension(f"cogs.{extension}")
         await interaction.followup.send(f"Cog '{extension}' loaded.")
         print(f"Cog '{extension}' has been loaded.")
-    except:
-        await interaction.response.send_message(f"There was an error loading Cog '{extension}'.")
-        print(f"Error loading Cog '{extension}'.")
+    except Exception as e:
+        await interaction.followup.send(f"There was an error loading Cog '{extension}': {e}")
+        print(f"Error loading Cog '{extension}': {e}")
+
 
 # Unload the specified cog files
 @app_commands.command(name="unload", description="Unload a specific cog")

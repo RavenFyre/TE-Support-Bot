@@ -3,3 +3,5 @@ python-dotenv
 numpy
 Flask
 langdetect
+google-cloud-translate
+google-auth
