@@ -14,6 +14,7 @@ import time
 import linecache
 import asyncio
 from langdetect import detect
+from google.oauth2 import service_account
 import SupportPanels
 from cogs.MultiLangPanel import MultiLangSupportButtons
 from cogs.EnglishCategoryPanel import EnglishCategorySupportButtons
@@ -146,4 +147,7 @@ async def send_modal(interaction: discord.Interaction):
 # Run bot:
 
 load_dotenv()
+credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH")
+print("GOOGLE_CREDENTIALS_PATH:", credentials_path)
+credentials = service_account.Credentials.from_service_account_file(credentials_path)
 bot.run(os.getenv("BOT_TOKEN"))
