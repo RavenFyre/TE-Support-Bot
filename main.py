@@ -93,6 +93,12 @@ class ExampleModal(discord.ui.Modal, title='Making a Suggestion'):
         embed = discord.Embed(description=f"**Suggestion:**\n{self.suggestion}\n\n**Suggested by:** {interaction.user.mention}", timestamp=datetime.datetime.now(), color=0xFFA500)
         bot_message = await channel_name.send(embed=embed)
 
+# Moderator role check for slash command usage
+def is_server_moderator():
+    def predicate(interaction: discord.Interaction) -> bool:
+        return any(role.id == 995028319324098640 for role in interaction.user.roles)
+    return app_commands.check(predicate)
+
 # --- SLASH COMMANDS ---
 
 # Sync the commands
@@ -107,7 +113,7 @@ async def sync_commands(interaction: discord.Interaction):
 
 # Load the specified cog files
 @app_commands.command(name="load", description="Load a specific cog")
-@app_commands.checks.has_permissions(manage_guild=True)
+@is_server_moderator()
 async def load_cog(interaction: discord.Interaction, extension: str):
     try:
         await interaction.response.defer()
@@ -121,6 +127,7 @@ async def load_cog(interaction: discord.Interaction, extension: str):
 
 # Unload the specified cog files
 @app_commands.command(name="unload", description="Unload a specific cog")
+@is_server_moderator()
 async def unload_cog(interaction: discord.Interaction, extension: str):
     await interaction.response.defer()
     await bot.unload_extension(f"cogs.{extension}")

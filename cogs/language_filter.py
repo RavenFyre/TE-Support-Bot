@@ -39,8 +39,14 @@ class LanguageFilter(commands.Cog):
         # Ignore messages in the Spanish channel
         if message.channel.id == spanish_channel_id:
             return
+        # If no letters at all, skip detection (emoji-only, numbers, punctuation)
+        if not re.search(r"[A-Za-zÀ-ÿ]", message.content):
+            return
         
         lang = self.detect_language(message.content)
+        # If it's English or undetected, skip
+        if lang == "en" or lang is None:
+            return
         if lang == "es":
             try:
                 spanish_chat = self.bot.get_channel(spanish_channel_id)
