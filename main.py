@@ -119,10 +119,10 @@ async def load_cog(interaction: discord.Interaction, extension: str):
     try:
         await interaction.response.defer()
         await bot.load_extension(f"cogs.{extension}")
-        await interaction.followup.send(f"Cog '{extension}' loaded.")
+        await interaction.followup.send(f"The feature '{extension}' has been enabled.")
         print(f"Cog '{extension}' has been loaded.")
     except Exception as e:
-        await interaction.followup.send(f"There was an error loading Cog '{extension}': {e}")
+        await interaction.followup.send(f"There was an error enabling the feature '{extension}': {e}")
         print(f"Error loading Cog '{extension}': {e}")
 
 
@@ -130,10 +130,14 @@ async def load_cog(interaction: discord.Interaction, extension: str):
 @app_commands.command(name="unload", description="Unload a specific cog")
 @is_server_moderator()
 async def unload_cog(interaction: discord.Interaction, extension: str):
-    await interaction.response.defer()
-    await bot.unload_extension(f"cogs.{extension}")
-    await interaction.followup.send(f"Cog '{extension}' unloaded.")
-    print(f"Cog '{extension}' has been unloaded.")
+    try:
+        await interaction.response.defer()
+        await bot.unload_extension(f"cogs.{extension}")
+        await interaction.followup.send(f"The feature '{extension}' has been disabled.")
+        print(f"Cog '{extension}' has been unloaded.")
+    except Exception as e:
+        await interaction.followup.send(f"There was an error disabling the feature '{extension}': {e}")
+        print(f"Error unloading Cog '{extension}': {e}")
 
 # --- EXAMPLES ---
 
