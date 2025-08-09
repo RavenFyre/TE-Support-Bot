@@ -28,6 +28,15 @@ class LanguageFilter(commands.Cog):
 
         credentials = service_account.Credentials.from_service_account_file(credentials_path)
         self.translate_client = translate.Client(credentials=credentials)
+        
+        # Only monitor these channels
+        self.monitored_channels = {
+            1109582139231580170,  # #main-chat
+            832954831324971080,   # #livestreams
+            832364475528904716,   # #clips-and-highlights
+            1116529174698532906,  # #anyone-need-3rd
+            926143359003787344,   # #suggestions
+        }
 
         self.logging_channel_id = 1403088963417276437
         self.spanish_channel_id = 1399064382583083119
@@ -44,8 +53,8 @@ class LanguageFilter(commands.Cog):
         # Skip bot's own messages
         if message.author.bot:
             return
-        # Skip Spanish channel monitoring
-        if message.channel.id == self.spanish_channel_id:
+        # Only process if message channel is in the monitored list
+        if message.channel.id not in self.monitored_channels:
             return
         # Skip emoji-only / no letters
         if not re.search(r"[A-Za-zÀ-ÿ]", message.content):
@@ -55,9 +64,10 @@ class LanguageFilter(commands.Cog):
             return
         lang = result.get("language")
         confidence = result.get("confidence")
-        # Skip English
+        # Skip English or Unknown Language
         if lang == "en" or lang is None:
             return
+        # Get readable name for language
         language_name = LANGUAGE_NAMES.get(lang, f"Unknown (`{lang}`)")
         confidence_text = f"{confidence * 100:.2f}%" if isinstance(confidence, (float, int)) else "Unknown"
         # Log non-English messages
@@ -87,7 +97,12 @@ class LanguageFilter(commands.Cog):
             elif lang == "pt":
                 await message.delete()
                 await message.channel.send(
-                    f"{message.author.mention}, please use English only in this chat. Portuguese is not permitted."
+                    f"{message.author.mention}, please use English only in this chat. Portuguese is not permitted here."
+                )
+            elif lang == "it":
+                await message.delete()
+                await message.channel.send(
+                    f"{message.author.mention}, please use English only in this chat. Italian is not permitted here."
                 )
         except Exception as e:
             print(f"Error deleting message or sending warning: {e}")
