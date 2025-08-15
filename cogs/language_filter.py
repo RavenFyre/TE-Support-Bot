@@ -87,19 +87,20 @@ class LanguageFilter(commands.Cog):
         except Exception as e:
             print(f"Error sending log embed: {e}")
         # Delete certain languages
+        confidence_threshold = 0.6
         try:
-            if lang == "es":
+            if lang == "es" and isinstance(confidence, (float, int)) and confidence >= confidence_threshold:
                 spanish_chat = self.bot.get_channel(self.spanish_channel_id)
                 await message.delete()
                 await message.channel.send(
                     f"{message.author.mention}, please use English only in this chat. You may speak Spanish in {spanish_chat.mention}"
                 )
-            elif lang == "pt":
+            elif lang == "pt" and isinstance(confidence, (float, int)) and confidence >= confidence_threshold:
                 await message.delete()
                 await message.channel.send(
                     f"{message.author.mention}, please use English only in this chat. Portuguese is not permitted here."
                 )
-            elif lang == "it":
+            elif lang == "it" and isinstance(confidence, (float, int)) and confidence >= confidence_threshold:
                 await message.delete()
                 await message.channel.send(
                     f"{message.author.mention}, please use English only in this chat. Italian is not permitted here."
