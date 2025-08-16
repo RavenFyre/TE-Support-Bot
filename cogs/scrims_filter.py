@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-class scrims_filter_cog(commands.Cog):
+class ScrimsFilter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,4 +36,4 @@ class scrims_filter_cog(commands.Cog):
         await self.bot.process_commands(message)
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(scrims_filter_cog(bot))
+    await bot.add_cog(ScrimsFilter(bot))
