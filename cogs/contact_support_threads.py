@@ -16,9 +16,9 @@ class SupportCategoryThreads(discord.ui.View):
         discord_support_url = "https://discord.com/channels/832364474769997895/1406663663036928069/1406663666828578866"
 
         # Link buttons (no callback needed!)
-        self.add_item(discord.ui.Button(label="Website Support", style=discord.ButtonStyle.link, url=website_support_url))
-        self.add_item(discord.ui.Button(label="Scrims Support", style=discord.ButtonStyle.link, url=scrims_support_url))
-        self.add_item(discord.ui.Button(label="Discord Support", style=discord.ButtonStyle.link, url=discord_support_url))
+        self.add_item(discord.ui.Button(label="Website Support", style=discord.ButtonStyle.link, url=website_support_url, row=0))
+        self.add_item(discord.ui.Button(label="Scrims Support", style=discord.ButtonStyle.link, url=scrims_support_url, row=1))
+        self.add_item(discord.ui.Button(label="Discord Support", style=discord.ButtonStyle.link, url=discord_support_url, row=2))
 
 # Button to return to contact support page
 
