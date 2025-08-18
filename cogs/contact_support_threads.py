@@ -11,14 +11,16 @@ class SupportCategoryThreads(discord.ui.View):
         super().__init__(timeout=None)
 
         # URLs to my thread messages
-        website_support_url = "https://discord.com/channels/832364474769997895/1406663028006588518/1406663031651307683"
-        scrims_support_url = "https://discord.com/channels/832364474769997895/1406663438456983584/1406663441879666778"
-        discord_support_url = "https://discord.com/channels/832364474769997895/1406663663036928069/1406663666828578866"
+        website_support_url = "https://discord.com/channels/832364474769997895/1406663028006588518/1407058248569458768"
+        scrims_support_url = "https://discord.com/channels/832364474769997895/1406663438456983584/1407058542925578283"
+        discord_support_url = "https://discord.com/channels/832364474769997895/1406663663036928069/1407058713017057350"
+        cheat_report_url = "https://discord.com/channels/832364474769997895/1407040526716239882/1407040529262317748"
 
         # Link buttons (no callback needed!)
         self.add_item(discord.ui.Button(label="Website Support", style=discord.ButtonStyle.link, url=website_support_url, row=0))
         self.add_item(discord.ui.Button(label="Scrims Support", style=discord.ButtonStyle.link, url=scrims_support_url, row=1))
         self.add_item(discord.ui.Button(label="Discord Support", style=discord.ButtonStyle.link, url=discord_support_url, row=2))
+        self.add_item(discord.ui.Button(label="Report Cheating", style=discord.ButtonStyle.link, url=cheat_report_url, row=3))
 
 # Button to return to contact support page
 
@@ -27,7 +29,7 @@ class ReturnToSupportPanel(discord.ui.View):
         super().__init__(timeout=None)
 
         # URL to my thread message
-        contact_support_url = "https://discord.com/channels/832364474769997895/1406546439500206120/1406676447497551875"
+        contact_support_url = "https://discord.com/channels/832364474769997895/1406546439500206120/1407054159873839155"
 
         # Link buttons (no callback needed!)
         self.add_item(discord.ui.Button(label="Back to Contact Support", style=discord.ButtonStyle.link, url=contact_support_url))
